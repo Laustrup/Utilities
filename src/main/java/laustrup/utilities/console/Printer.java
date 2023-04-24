@@ -1,6 +1,8 @@
-package laustrup.utilities.utilities.console;
+package laustrup.utilities.console;
 
-import laustrup.bandwichpersistence.Program;
+// TODO Connect to the Program og persistence project.
+//import laustrup.bandwichpersistence.Program;
+
 import lombok.Getter;
 
 import java.time.Duration;
@@ -25,8 +27,8 @@ public class Printer extends Painter implements IPrinter {
 
     /** The specified PrinterMode for this Printer, that will behave depending on the choosen enum. */
     @Getter
-    private PrinterMode _mode = Program.get_instance().get_state().equals(Program.State.TESTING)
-            ? PrinterMode.HIGH_CONTRAST : PrinterMode.NOIRE;
+    private PrinterMode _mode = /*Program.get_instance().get_state().equals(Program.State.TESTING)
+            ?*/ PrinterMode.HIGH_CONTRAST /*: PrinterMode.NOIRE*/;
 
     /**
      * Configures the mode for the Printer.
@@ -34,7 +36,7 @@ public class Printer extends Painter implements IPrinter {
      * @return The configured mode.
      */
     public PrinterMode set_mode(PrinterMode mode) {
-        _mode = Program.get_instance().get_state().equals(Program.State.TESTING) ? PrinterMode.HIGH_CONTRAST : mode;
+        _mode = /*Program.get_instance().get_state().equals(Program.State.TESTING) ?*/ PrinterMode.HIGH_CONTRAST /*: mode*/;
         set_startRow();
         return _mode;
     }

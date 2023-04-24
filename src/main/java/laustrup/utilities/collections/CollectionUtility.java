@@ -1,7 +1,7 @@
-package laustrup.utilities.utilities.collections;
+package laustrup.utilities.collections;
 
-import laustrup.bandwichpersistence.utilities.Utility;
-import laustrup.bandwichpersistence.utilities.console.Printer;
+import laustrup.utilities.Utility;
+import laustrup.utilities.console.Printer;
 import lombok.Getter;
 
 import java.util.HashMap;

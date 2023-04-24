@@ -31,3 +31,13 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Package settings ###
+/.m2/settings.xml
+
+### Temps ###
+/src/main/java/laustrup/utilities/models/
+/src/main/java/laustrup/utilities/services/
+
+### Outputs ###
+/out/

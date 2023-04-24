@@ -1,4 +1,4 @@
-package laustrup.utilities.utilities.collections;
+package laustrup.utilities.collections;
 
 //TODO update documentation
 public interface ICollectionUtility<E> {

@@ -1,6 +1,7 @@
-package laustrup.utilities.utilities.parameters;
+package laustrup.utilities.parameters;
 
-import laustrup.bandwichpersistence.utilities.Utility;
+import laustrup.utilities.Utility;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

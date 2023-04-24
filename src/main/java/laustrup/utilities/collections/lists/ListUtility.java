@@ -1,6 +1,6 @@
-package laustrup.utilities.utilities.collections.lists;
+package laustrup.utilities.collections.lists;
 
-import laustrup.bandwichpersistence.utilities.collections.CollectionUtility;
+import laustrup.utilities.collections.CollectionUtility;
 
 public abstract class ListUtility<E> extends CollectionUtility<E> {
 

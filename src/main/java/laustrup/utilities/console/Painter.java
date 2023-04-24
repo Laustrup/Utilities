@@ -1,6 +1,6 @@
-package laustrup.utilities.utilities.console;
+package laustrup.utilities.console;
 
-import laustrup.bandwichpersistence.utilities.Utility;
+import laustrup.utilities.Utility;
 
 /**
  * Paints String that will be used for the console into another colour

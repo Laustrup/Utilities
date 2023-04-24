@@ -1,4 +1,4 @@
-package laustrup.utilities.utilities;
+package laustrup.utilities;
 
 import lombok.Getter;
 
@@ -7,7 +7,7 @@ import lombok.Getter;
  */
 public abstract class Utility {
 
-    /** Used for the version number as year|version|update. */
+    /** Used for the version number in format year|version|update. */
     @Getter
     protected int _year, _update;
 

@@ -1,6 +1,6 @@
-package laustrup.utilities.utilities.collections.sets;
+package laustrup.utilities.collections.sets;
 
-import laustrup.bandwichpersistence.utilities.collections.CollectionUtility;
+import laustrup.utilities.collections.CollectionUtility;
 
 public abstract class SetUtility<E> extends CollectionUtility<E> {
 

@@ -1,4 +1,4 @@
-package laustrup.utilities.utilities.console;
+package laustrup.utilities.console;
 
 
 import java.time.LocalDateTime;

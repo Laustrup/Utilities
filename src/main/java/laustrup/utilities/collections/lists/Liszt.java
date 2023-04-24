@@ -1,7 +1,7 @@
-package laustrup.utilities.utilities.collections.lists;
+package laustrup.utilities.collections.lists;
 
-import laustrup.bandwichpersistence.utilities.collections.ICollectionUtility;
-import laustrup.bandwichpersistence.utilities.console.Printer;
+import laustrup.utilities.collections.ICollectionUtility;
+import laustrup.utilities.console.Printer;
 
 import java.time.LocalDateTime;
 import java.util.*;

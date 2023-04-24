@@ -1,4 +1,4 @@
-package laustrup.utilities.utilities.parameters;
+package laustrup.utilities.parameters;
 
 /**
  * This interface contains methods, that are meant for Plato class.
