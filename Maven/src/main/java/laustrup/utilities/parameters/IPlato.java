@@ -6,10 +6,6 @@ package laustrup.utilities.parameters;
  */
 public interface IPlato {
 
-    /**
-     *
-     * @return
-     */
     boolean randomize();
     boolean randomize(int change);
 }

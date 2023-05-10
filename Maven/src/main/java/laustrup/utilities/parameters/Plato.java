@@ -1,11 +1,11 @@
 package laustrup.utilities.parameters;
 
 import laustrup.utilities.Utility;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
 import java.util.Random;
 
 /**
@@ -25,9 +25,7 @@ public class Plato extends Utility implements IPlato {
     @Getter
     private Argument _argument;
 
-    /**
-     * Contains information, that can be written about actions or statuses.
-     */
+    /** Contains information, that can be written about actions or statuses. */
     @Getter @Setter
     private String _message;
 
@@ -75,11 +73,9 @@ public class Plato extends Utility implements IPlato {
     /** Sets the argument to undefined */
     public Plato() { this(Argument.UNDEFINED); }
     public Plato(Argument argument) {
-        super(LocalDateTime.now().getYear(),1,1);
         set_argument(argument);
     }
     public Plato(boolean isTrue) {
-        super(LocalDateTime.now().getYear(),1,1);
         set_argument(isTrue);
     }
 
@@ -102,9 +98,7 @@ public class Plato extends Utility implements IPlato {
         return _truth;
     }
 
-    /**
-     * Contains the different value options for a Plato class.
-     */
+    /** Contains the different value options for a Plato class. */
     public enum Argument {
         FALSE,
         TRUE,

@@ -1,14 +1,12 @@
 package laustrup.utilities.console;
 
-// TODO Connect to the Program og persistence project.
-//import laustrup.bandwichpersistence.Program;
-
 import lombok.Getter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-// Todo first \t of a row only appears as a space.
+// TODO first \t of a row only appears as a space.
+// TODO Double newline is error
 /**
  * Will handle printing of statements to the console.
  * Contains three different options for modes, default will use a normal println,
@@ -104,10 +102,6 @@ public class Printer extends Painter implements IPrinter {
             _instance = new Printer();
         }
         return _instance;
-    }
-
-    private Printer() {
-        super(LocalDateTime.now().getYear(), 1, 1);
     }
 
     @Override

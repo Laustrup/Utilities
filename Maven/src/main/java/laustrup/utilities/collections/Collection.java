@@ -7,52 +7,59 @@ import lombok.Getter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * A Utility that contains collections of data such as a Map and an array.
  * @param <E> The type of element that are wished to be used in this class.
  */
-public abstract class CollectionUtility<E> extends Utility {
+public abstract class Collection<E> extends Utility<E> {
 
     /** Contains all the elements that are inside the Liszt. */
     @Getter
     protected E[] _data;
 
     /** Containing all data elements in a map for quick access. */
-    @SuppressWarnings("all")
     protected Map<String, E> _map;
 
     /** The destinations for the map, before being inserted into the map */
-    @SuppressWarnings("all")
     protected Map<String,E> _destinations;
 
     /** The keys that the map can use for inserting relevant data from the destinations into the map. */
     protected String[] _destinationKeys;
 
     /**
-     * Creates the Utility with empty data and a hash type of map.
-     * @param year The year of the Utility.
-     * @param version The middle index of version.
-     * @param update The update of the version.
-     */
-    protected CollectionUtility(int year, int version, int update) {
-        this(false, year, version, update);
-    }
-
-    /**
      * Creates the Utility with empty data.
      * @param isLinked Decides if the map should be linked or hash type.
-     * @param year The year of the Utility.
-     * @param version The middle index of version.
-     * @param update The update of the version.
      */
-    protected CollectionUtility(boolean isLinked, int year, int version, int update) {
-        super(year,version,update);
+    protected Collection(boolean isLinked) {
         _data = convert(new Object[0]);
         _destinationKeys = new String[0];
 
         if (isLinked) _map = new LinkedHashMap<>(); else _map = new HashMap<>();
         if (isLinked) _destinations = new LinkedHashMap<>(); else _destinations = new HashMap<>();
+    }
+
+    /**
+     * Will perform all Java utility functions with a try catch of converting collections.
+     * @param function The function that should be executed for each item in the collection.
+     * @param collection The inputs as a collection of ? objects.
+     * @param action The title of the action that will be printed, if an Exception is caught, presented as past tense.
+     * @return True if there is a change in the size after the actions.
+     */
+    protected boolean All(Function<E,Object> function, Object[] collection, String action) {
+        int previousSize = get_data().length;
+
+        for (Object item : collection) {
+            try {
+                function.apply(convert(item));
+            } catch (Exception e) {
+                Printer.get_instance().print(item.toString() + " couldn't " + action +
+                        " of " + getClass() + ", probably because the type is different than its generic...",e);
+            }
+        }
+
+        return get_data().length != previousSize;
     }
 
     /**

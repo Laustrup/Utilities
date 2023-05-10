@@ -1,7 +1,7 @@
 package laustrup.utilities.collections;
 
 //TODO update documentation
-public interface ICollectionUtility<E> {
+public interface ICollection<E> {
 
     /**
      * Ensures that this collection contains the specified element (optional operation).

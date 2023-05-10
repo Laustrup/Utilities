@@ -8,15 +8,6 @@ import laustrup.utilities.Utility;
  */
 public abstract class Painter extends Utility {
 
-    /** Is used to generate the version of the Utility.
-     * @param year The year of the Utility.
-     * @param version The middle index of version.
-     * @param update The update of the version.
-     */
-    protected Painter(int year, int version, int update) {
-        super(year, version, update);
-    }
-
     /**
      * Will generate a escape-sequence for a specific colour.
      * @param left The left value.

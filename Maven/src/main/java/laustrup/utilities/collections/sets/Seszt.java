@@ -1,12 +1,15 @@
 package laustrup.utilities.collections.sets;
 
-import laustrup.utilities.collections.CollectionUtility;
-import laustrup.utilities.collections.ICollectionUtility;
+import jdk.jshell.spi.ExecutionControl;
+import laustrup.utilities.Utility;
+import laustrup.utilities.collections.Collection;
+import laustrup.utilities.collections.ICollection;
 import laustrup.utilities.console.Printer;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -21,7 +24,7 @@ import java.util.stream.Stream;
  * letter starts with 1 instead 0 in the parameters.
  * @param <E> The type of element that are wished to be used in this class.
  */
-public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollectionUtility<E> {
+public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
 
     /** Default constructor that will build the Seszt without containing any data and the map as linked. */
     public Seszt() {
@@ -33,7 +36,7 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollectionUtilit
      * @param isLinked Will initialize the map as linked if true, else as hash.
      */
     public Seszt(boolean isLinked) {
-        super(isLinked, LocalDateTime.now().getYear(), 1, 1);
+        super(isLinked);
     }
 
     /**
@@ -59,11 +62,7 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollectionUtilit
      * @param isLinked Will initialize the map as linked if true, else as hash.
      */
     public Seszt(E[] data, boolean isLinked) {
-        super(LocalDateTime.now().getYear(), 1, 1);
-
-        _map = isLinked ? new LinkedHashMap<>() : new HashMap<>();
-        _destinations = isLinked ? new LinkedHashMap<>() : new HashMap<>();
-
+        super(isLinked);
         add(data);
     }
 
@@ -72,15 +71,6 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollectionUtilit
     @Override public Iterator<E> iterator() { return Arrays.stream(_data).iterator(); }
     @Override public void forEach(Consumer<? super E> action) { Set.super.forEach(action); }
     @Override public Object[] toArray() { return Arrays.stream(_data).toArray(); }
-
-    @Override
-    public boolean containsAll(Collection<?> collection) {
-        for (Object item : collection)
-            if (!contains(item))
-                return false;
-
-        return true;
-    }
 
     @Override
     public boolean contains(E[] elements) {
@@ -117,20 +107,6 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollectionUtilit
         int size = size();
         Add(elements);
         return size < size();
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends E> collection) {
-        int previousSize = size();
-        Add(convert(collection.toArray()));
-        return previousSize == size() - collection.size();
-    }
-
-    @Override
-    public boolean addAll(CollectionUtility<? extends E> collection) {
-        int previousSize = size();
-        Add(collection.get_data());
-        return previousSize == size() - collection.get_data().length;
     }
 
     @Override public E[] Add(E element) {
@@ -234,16 +210,8 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollectionUtilit
         return null;
     }
 
-    @Override
-    public E get(String key) {
+    @Override public E get(String key) {
         return _map.get(key);
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> collection) {
-        int previousSize = size();
-        remove(convert(collection.toArray()));
-        return previousSize == size() + collection.size();
     }
 
     @Override
@@ -269,6 +237,28 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollectionUtilit
             return false;
 
         return remove(index);
+    }
+
+    @Override
+    public boolean containsAll(java.util.Collection<?> collection) {
+        return All(this::contains, collection.toArray(), "see if is contained");
+    }
+
+    @Override
+    public boolean addAll(java.util.Collection<? extends E> collection) {
+        return All(this::add, collection.toArray(), "be added");
+    }
+
+    @Override
+    public boolean retainAll(java.util.Collection<?> collection) {
+        int previousSize = size();
+        retain(convert(collection.toArray()));
+        return previousSize != size();
+    }
+
+    @Override
+    public boolean removeAll(java.util.Collection<?> collection) {
+        return All(this::remove, collection.toArray(), "be removed");
     }
 
     @Override
@@ -306,18 +296,6 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollectionUtilit
     }
 
     @Override
-    public boolean retainAll(Collection<?> collection) {
-        try {
-            retain(convert(collection.toArray()));
-        } catch (Exception e) {
-            Printer.get_instance().print(Printer.get_instance().arrayContent(collection.toArray()) +
-                " couldn't be contained, since it is of different type that E...",e);
-        }
-
-        return Arrays.equals(_data, convert(collection.toArray()));
-    }
-
-    @Override
     public E[] retain(E[] elements) {
         try {
             E[] removes = convert(new Object[elements.length]);
@@ -336,22 +314,6 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollectionUtilit
         }
 
         return get_data();
-    }
-
-    @Override
-    public boolean containsAll(CollectionUtility<?> collection) {
-        for (E datum : convert(collection.get_data()))
-            if (!contains(datum))
-                return false;
-
-        return true;
-    }
-
-    @Override
-    public boolean removeAll(CollectionUtility<?> collection) {
-        int previousSize = size();
-        remove(collection.get_data());
-        return previousSize == size() + collection.get_data().length;
     }
 
     @Override public boolean removeIf(Predicate<? super E> filter) { return Set.super.removeIf(filter); }

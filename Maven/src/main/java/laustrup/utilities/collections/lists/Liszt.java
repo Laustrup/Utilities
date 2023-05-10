@@ -1,6 +1,6 @@
 package laustrup.utilities.collections.lists;
 
-import laustrup.utilities.collections.ICollectionUtility;
+import laustrup.utilities.collections.ICollection;
 import laustrup.utilities.console.Printer;
 
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import java.util.stream.Stream;
  * letter starts with 1 instead 0 in the parameters.
  * @param <E> The type of element that are wished to be used in this class.
  */
-public class Liszt<E> extends ListUtility<E> implements List<E>, ICollectionUtility<E> {
+public class Liszt<E> extends laustrup.utilities.collections.Collection<E> implements List<E>, ICollection<E> {
 
     /** Creates the Liszt with empty data and a hash type of map. */
     public Liszt() { this(false); }
@@ -30,7 +30,7 @@ public class Liszt<E> extends ListUtility<E> implements List<E>, ICollectionUtil
      * Creates the Liszt with empty data.
      * @param isLinked Decides if the map should be linked or hash type.
      */
-    public Liszt(boolean isLinked) { super(isLinked, LocalDateTime.now().getYear(),1,1); }
+    public Liszt(boolean isLinked) { super(isLinked); }
 
     /**
      * Creates the Liszt with data and a hash type of map.
@@ -44,13 +44,7 @@ public class Liszt<E> extends ListUtility<E> implements List<E>, ICollectionUtil
      * @param isLinked Decides if the map should be linked or hash type.
      */
     public Liszt(E[] data, boolean isLinked) {
-        super(LocalDateTime.now().getYear(),1,1);
-        _destinationKeys = new String[0];
-
-        if (isLinked) _map = new LinkedHashMap<>(); else _map = new HashMap<>();
-        if (isLinked) _destinations = new LinkedHashMap<>(); else _destinations = new HashMap<>();
-        _data = convert(new Object[0]);
-
+        super(isLinked);
         add(data);
     }
 
