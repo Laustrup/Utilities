@@ -96,7 +96,7 @@ public class LisztTeszts extends Tester<Object> {
                 return bands;
             });
 
-            act(expectations,element -> _liszt.remove(element));
+            act(() -> _liszt.remove(expectations));
 
             asserting(_liszt.isEmpty());
         });

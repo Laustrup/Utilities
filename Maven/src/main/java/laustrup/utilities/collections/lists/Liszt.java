@@ -230,6 +230,7 @@ public class Liszt<E> extends laustrup.utilities.collections.Collection<E> imple
     }
 
     public E Remove(int index) { return remove(index-1); }
+
     @Override
     public E remove(int index) {
         if (index > size() || 0 > index)
