@@ -1,26 +1,32 @@
 package laustrup.utilities.collections;
 
-//TODO update documentation
+/** Contains features that are used in all collection classes. */
 public interface ICollection<E> {
 
     /**
-     * Ensures that this collection contains the specified element (optional operation).
-     * Returns true if this collection changed as a result of the call.
-     * (Returns false if this collection does not permit duplicates and already contains the specified element).
-     * Collections that support this operation may place limitations on what elements may be added to this collection.
-     * In particular, some collections will refuse to add null elements,
-     * and others will impose restrictions on the type of elements that may be added.
-     * Collection classes should clearly specify in their documentation any restrictions on what elements may be added.
-     * If a collection refuses to add a particular element for any reason other than that it already contains the element,
-     * it must throw an exception (rather than returning false).
-     * This preserves the invariant that a collection always contains the specified element after this call returns.
-     * @param elements Elements whose presence in this collection is to be ensured.
-     * @return true if this collection changed as a result of the call
+     * Adds some elements to the array data and the map data, making them available to be iterated through and used in map.
+     * Filters out elements that are null.
+     * @param elements Some elements of generic E that will be added.
+     * @return True if the data is added, otherwise false.
      */
     boolean add(E[] elements);
 
+    /**
+     * Checks if the given data exist in this collection by getting from the map.
+     * @param elements The data that should exist in this collection.
+     * @return True if all elements exist in the collection, otherwise false.
+     */
     boolean contains(E[] elements);
 
+    /**
+     * Finds the first data in the datum array.
+     * @return The found data element.
+     */
     E getFirst();
+
+    /**
+     * Finds the last data in the datum array.
+     * @return The found data element.
+     */
     E getLast();
 }
