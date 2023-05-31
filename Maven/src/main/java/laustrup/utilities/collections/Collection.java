@@ -182,17 +182,20 @@ public abstract class Collection<E> extends Utility<E> {
         _destinations.clear();
     }
 
-    public E handleSet(int index, E element) {
-        try {
-            _map.remove(_data[index].toString());
-            _data[index] = element;
-            _map.put(element.toString(),element);
-        } catch (IndexOutOfBoundsException e) {
-            Printer.get_instance().print("At setting " + element + " in Liszt, the index " + index +
-                    " was out of bounce of size " + _data.length + "...",e);
-        }
+    protected E handleSet(int index, E element) {
+        if (element != null)
+            try {
+                _map.remove(_data[index].toString());
+                _data[index] = element;
+                _map.put(element.toString(),element);
 
-        return _map.containsKey(element.toString()) ? _map.get(element.toString()) : _data[index];
+                return _map.containsKey(element.toString()) ? _map.get(element.toString()) : _data[index];
+            } catch (IndexOutOfBoundsException e) {
+                Printer.get_instance().print("At setting " + element + " in Liszt, the index " + index +
+                        " was out of bounce of size " + _data.length + "...",e);
+            }
+
+        return null;
     }
 
     /**

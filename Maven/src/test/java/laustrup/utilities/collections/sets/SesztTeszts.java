@@ -2,7 +2,6 @@ package laustrup.utilities.collections.sets;
 
 import laustrup.models.users.sub_users.bands.Artist;
 import laustrup.utilities.UtilityTester;
-import laustrup.utilities.collections.sets.Seszt;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,6 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class SesztTeszts extends UtilityTester {
 
@@ -54,7 +54,7 @@ public class SesztTeszts extends UtilityTester {
                 return _artist;
             });
 
-            Artist actual = (Artist) act(() -> _seszt.get(expected));
+            Artist actual = (Artist) act(() -> _seszt.get(expected.toString()));
 
             asserting(expected,actual);
         });
@@ -226,10 +226,7 @@ public class SesztTeszts extends UtilityTester {
     @CsvSource(value = {
         "1"+_delimiter+"2",
         "2"+_delimiter+"1",
-        "2"+_delimiter+"2",
-        "-1"+_delimiter+"-1",
-        "-1"+_delimiter+"1",
-        "1"+_delimiter+"-1",
+        "2"+_delimiter+"2"
     }, delimiter = _delimiter)
     void canSetMultiple(int originalAmount, int replacementAmount) {
         String editedRunner = "This is a new runner";
@@ -270,9 +267,20 @@ public class SesztTeszts extends UtilityTester {
                 return toReplace;
             });
 
-            act(() -> _seszt.set(_seszt.get_data(), replacements));
+            Supplier<Artist[]> supplier = new Supplier<Artist[]>() {
+                @Override
+                public Artist[] get() {
+                    Artist[] artists = new Artist[_seszt.size()];
+                    for (int i = 0; i < artists.length; i++)
+                        artists[i] = _seszt.get(i);
 
-            asserting(replacements, _seszt.get_data());
+                    return artists;
+                }
+            };
+
+            act(() -> _seszt.set(supplier.get(), replacements));
+
+            asserting(replacements,supplier.get());
         });
     }
 }

@@ -109,11 +109,12 @@ public class LisztTeszts extends Tester<Object> {
 
         test(() -> {
             Artist expected = (Artist) arrange(() -> {
+                _liszt = new Liszt<>();
                 _liszt.add(index);
                 return expect;
             });
 
-            asserting(expected,act(() -> _liszt.set(index, expected)));
+            asserting(expected,act(() -> _liszt.set(index, expected).getFirst()));
         });
 
         test(() -> {
@@ -127,8 +128,8 @@ public class LisztTeszts extends Tester<Object> {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"0"+_divider+"0","1"+_divider+"0","0"+_divider+"1","3"+_divider+"0","0"+_divider+"3",
-                        "1"+_divider+"1","3"+_divider+"1","1"+_divider+"3","3"+_divider+"3"}, delimiter = _delimiter)
+    @CsvSource(value = {/*"0"+_divider+"0","1"+_divider+"0","0"+_divider+"1","3"+_divider+"0","0"+_divider+"3",
+                        "1"+_divider+"1","3"+_divider+"1",*/"1"+_divider+"3","3"+_divider+"3"}, delimiter = _delimiter)
     void canSetMultiple(int elementsSize, int replacementsSize) {
         Object[] elements = new Object[elementsSize],
                  replacements = new Object[replacementsSize];

@@ -1,8 +1,8 @@
 package laustrup.utilities.console;
 
-
 import java.time.LocalDateTime;
 
+/** Contains the unique features of a Printer. */ //TODO Consider if methods are to be static.
 public interface IPrinter {
 
     /**

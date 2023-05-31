@@ -1,15 +1,12 @@
 package laustrup.utilities.collections.sets;
 
-import jdk.jshell.spi.ExecutionControl;
-import laustrup.utilities.Utility;
 import laustrup.utilities.collections.Collection;
 import laustrup.utilities.collections.ICollection;
+import laustrup.utilities.collections.lists.Liszt;
 import laustrup.utilities.console.Printer;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -24,7 +21,7 @@ import java.util.stream.Stream;
  * letter starts with 1 instead 0 in the parameters.
  * @param <E> The type of element that are wished to be used in this class.
  */
-public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
+public class Seszt<E> extends Collection<E> implements ISeszt<E>, Set<E>, ICollection<E> {
 
     /** Default constructor that will build the Seszt without containing any data and the map as linked. */
     public Seszt() {
@@ -109,14 +106,25 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
         return size < size();
     }
 
-    @Override public E[] Add(E element) {
+    @Override public Seszt<E> Add(E element) {
         return Add(convert(new Object[]{element}));
     }
 
     @Override
-    public E[] Add(E[] elements) {
+    public Seszt<E> Add(E[] elements) {
         handleAdd(filterUniques(elements));
-        return get_data();
+        return this;
+    }
+
+    @Override
+    public Seszt<E> Add(Collection<E> collection) {
+        add(collection.get_data());
+        return this;
+    }
+
+    @Override
+    public Seszt<E> set(Collection<E> originals, Collection<E> replacements) {
+        return set(originals.get_data(), replacements.get_data());
     }
 
     /**
@@ -143,16 +151,17 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
     }
 
     @Override
-    public E set(E original, E replacement) {
+    public Seszt<E> set(E original, E replacement) {
         try {
             return set(indexOf(original), replacement);
-        } catch (ClassNotFoundException e) {
-            return null;
+        } catch (ClassNotFoundException e) { //TODO Remove space when Printer can print double newline
+            Printer.get_instance().print("Couldn't set " + replacement + " of " + original + " in\n " + this.toString());
+            return this;
         }
     }
 
     @Override
-    public E[] set(E[] originals, E[] replacements) {
+    public Seszt<E> set(E[] originals, E[] replacements) {
         int i = 0;
 
         for (; i < Math.min(originals.length, replacements.length); i++)
@@ -165,16 +174,19 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
             for (; i < replacements.length; i++)
                 add(replacements[i]);
 
-        return get_data();
+        return this;
     }
 
     @Override
-    public E set(int index, E element) {
-        if (element != null) {
+    public Seszt<E> set(int index, E element) {
+        if (element != null)
             handleSet(index, element);
-            return get(element);
-        }
 
+        return this;
+    }
+
+    @Override
+    public Seszt<E> Set(int index, E element) {
         return null;
     }
 
@@ -191,18 +203,6 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
     @Override public E get(int index) { return handleGet(index); }
 
     @Override
-    public E get(E element) {
-        if (size() > 0 && !element.getClass().isPrimitive())
-            return contains(element) ? _map.get(element.toString()) : null;
-        else
-            for (E datum : get_data())
-                if (datum == element)
-                    return datum;
-
-        return null;
-    }
-
-    @Override
     public E Get(int index) {
         if (index > 0)
             return handleGet(index-1);
@@ -215,11 +215,11 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
     }
 
     @Override
-    public E[] remove(E[] elements) {
+    public Seszt<E> remove(E[] elements) {
         for (E element : elements)
             remove(element);
 
-        return _data;
+        return this;
     }
 
     @Override
@@ -236,7 +236,8 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
         if (index < 0)
             return false;
 
-        return remove(index);
+        remove(index);
+        return contains(object);
     }
 
     @Override
@@ -262,9 +263,9 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
     }
 
     @Override
-    public boolean Remove(int index) {
+    public Seszt<E> Remove(int index) {
         if (index == 0)
-            return false;
+            return this;
 
         return remove(index-1);
     }
@@ -273,9 +274,10 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
     public int indexOf(E element) throws ClassNotFoundException {
         if (element.getClass().isPrimitive() || element != null) {
             for (int i = 0; i < get_data().length; i++) {
-                if (element.getClass().isPrimitive())
+                if (element.getClass().isPrimitive()) {
                     if (element == get_data()[i])
                         return i;
+                }
                 else
                     if (element.toString().equals(get_data()[i].toString()))
                         return i;
@@ -286,17 +288,16 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
     }
 
     @Override
-    public boolean remove(int index) {
+    public Seszt<E> remove(int index) {
         if (index < 0)
-            return false;
+            return this;
 
-        int previousSize = size();
         handleRemove(index);
-        return previousSize == size() + 1;
+        return this;
     }
 
     @Override
-    public E[] retain(E[] elements) {
+    public Seszt<E> retain(E[] elements) {
         try {
             E[] removes = convert(new Object[elements.length]);
             int index = 0;
@@ -313,7 +314,7 @@ public class Seszt<E> extends SetUtility<E> implements Set<E>, ICollection<E> {
                     " couldn't be contained, since it is of different type that E...",e);
         }
 
-        return get_data();
+        return this;
     }
 
     @Override public boolean removeIf(Predicate<? super E> filter) { return Set.super.removeIf(filter); }

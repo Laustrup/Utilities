@@ -3,7 +3,6 @@ package laustrup.utilities.collections.lists;
 import laustrup.utilities.collections.ICollection;
 import laustrup.utilities.console.Printer;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
@@ -21,7 +20,7 @@ import java.util.stream.Stream;
  * letter starts with 1 instead 0 in the parameters.
  * @param <E> The type of element that are wished to be used in this class.
  */
-public class Liszt<E> extends laustrup.utilities.collections.Collection<E> implements List<E>, ICollection<E> {
+public class Liszt<E> extends laustrup.utilities.collections.Collection<E> implements ILiszt<E>, List<E>, ICollection<E> {
 
     /** Creates the Liszt with empty data and a hash type of map. */
     public Liszt() { this(false); }
@@ -53,7 +52,7 @@ public class Liszt<E> extends laustrup.utilities.collections.Collection<E> imple
     @Override
     public boolean contains(Object object) {
         if (object != null) {
-            @SuppressWarnings("all") boolean exists = _map.containsValue(object);
+            boolean exists = _map.containsValue(object);
             if (!exists) {
                 for (E data : _data) {
                     if (object == data) {
@@ -96,96 +95,94 @@ public class Liszt<E> extends laustrup.utilities.collections.Collection<E> imple
     }
 
     @Override
-    public E[] Add(E element) {
-        return null;
+    public Liszt<E> Add(E element) {
+        add(element);
+        return this;
     }
 
     @Override
-    public E[] Add(E[] elements) {
-        return null;
+    public Liszt<E> Add(E[] elements) {
+        add(elements);
+        return this;
     }
 
     @Override
-    public E[] set(E[] elements, E[] replacements) {
-        boolean elementsIsNullOrEmpty = elements == null || elements.length == 0,
+    public Liszt<E> Add(laustrup.utilities.collections.Collection<E> collection) {
+        add(collection.get_data());
+        return this;
+    }
+
+    @Override
+    public Liszt<E> set(laustrup.utilities.collections.Collection<E> originals, laustrup.utilities.collections.Collection<E> replacements) {
+        return set(originals.get_data(),replacements.get_data());
+    }
+
+    @Override //TODO Consider if this could be implemented as clean as Seszt.
+    public Liszt<E> set(E[] originals, E[] replacements) {
+        E[] replaced = convert(new Object[replacements.length]);
+        boolean elementsIsNullOrEmpty = originals == null || originals.length == 0,
                 replacementsIsNullOrEmpty = replacements == null || replacements.length == 0;
 
         if (elementsIsNullOrEmpty && replacementsIsNullOrEmpty)
-            return convert(new Object[]{});
+            return this;
         else if (replacementsIsNullOrEmpty)
-            remove(elements);
+            remove(originals);
         else if (elementsIsNullOrEmpty)
             add(replacements);
-        else if (elements.length == size() && replacements.length == size()) {
-            _data = replacements;
-            _map.clear();
-            for (E element : replacements)
-                _map.put(element.toString(),element);
-        }
         else {
-            int replacement = 0, elementsRemoved = 0;
+            int replacementIndex = 0;
             for (int i = 1; i <= size(); i++) {
-                for (E element : elements) {
+                for (E element : originals) {
                     if (Get(i).toString().equals(element.toString())) {
-                        if (replacements.length - 1 >= replacement) {
-                            set(i, replacements[replacement]);
-                            elementsRemoved++;
-                            replacement++;
-                        }
+                        Set(i, replacements[replacementIndex]);
+                        replaced[replacementIndex] = replacements[replacementIndex];
+                        if (replacementIndex < replacements.length - 1)
+                            replacementIndex++;
+
                         break;
                     }
                 }
-                if (elementsRemoved > elements.length || replacements.length <= replacement)
+                if (replacements.length == replacementIndex - 1)
                     break;
             }
-            if (replacement < replacements.length) {
-                E[] extras = convert(new Object[elements.length - elementsRemoved]);
-
-                for (int i = 0; i + replacement < replacements.length; i++)
-                    extras[i] = replacements[i + replacement];
-
+            if (replaced.length < replacements.length) {
+                E[] extras = convert(new Object[replacements.length - replaced.length]);
+                System.arraycopy(replacements, replaced.length, extras, replaced.length, replacements.length - replaced.length);
                 add(extras);
             }
-            if (elementsRemoved < elements.length) {
-                E[] extras = convert(new Object[elements.length - elementsRemoved]);
-
-                for (int i = 0; i + elementsRemoved < elements.length; i++)
-                    extras[i] = elements[i + elementsRemoved];
-
+            if (replaced.length < originals.length) {
+                E[] extras = convert(new Object[originals.length - replaced.length]);
+                System.arraycopy(originals, replaced.length, extras, replaced.length, originals.length - replaced.length);
                 remove(extras);
             }
         }
 
-        return Objects.requireNonNull(replacements);
+        return this;
     }
 
     @Override
-    public E set(E element, E replacement) {
+    public Liszt<E> set(E original, E replacement) {
         for (int i = 0; i < size(); i++)
-            if (get(i).toString().equals(element.toString()))
-                return set(i,replacement);
+            if (get(i).toString().equals(original.toString()))
+                set(i,replacement);
 
-        return contains(element.toString()) ? element : Get(replacement.toString());
+        return this;
+    }
+
+    @Override
+    public Liszt<E> Set(int index, E element) {
+        set(index-1,element);
+        return this;
     }
 
     @Override
     public E set(int index, E element) {
-        try {
-            _map.remove(_data[index-1].toString());
-            _data[index-1] = element;
-            _map.put(element.toString(),element);
-        } catch (IndexOutOfBoundsException e) {
-            Printer.get_instance().print("At setting " + element + " in Liszt, the index " + index +
-                    " was out of bounce of size " + size() + "...",e);
-        }
-
-        return _map.containsKey(element.toString()) ? Get(element.toString()) : _data[index-1];
+        handleSet(index,element);
+        return _map.containsKey(element.toString()) ? Get(element.toString()) : _data[index];
     }
 
-
-
     @Override
-    public E[] remove(E[] elements) {
+    public Liszt<E> remove(E[] elements) {
         elements = filterElements(elements);
 
         try {
@@ -196,7 +193,7 @@ public class Liszt<E> extends laustrup.utilities.collections.Collection<E> imple
             Printer.get_instance().print("Couldn't remove object in remove multiple elements...", e);
         }
 
-        return _data;
+        return this;
     }
 
     @Override
@@ -229,7 +226,11 @@ public class Liszt<E> extends laustrup.utilities.collections.Collection<E> imple
         return false;
     }
 
-    public E Remove(int index) { return remove(index-1); }
+    @Override
+    public Liszt<E> Remove(int index) {
+        remove(index-1);
+        return this;
+    }
 
     @Override
     public E remove(int index) {
